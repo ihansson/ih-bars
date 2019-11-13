@@ -2,8 +2,6 @@ let nodes = [],
 	last_call = false,
 	events = {};
 
-let bar_style = 'display:inline-block;text-align:center;background:blue;color:white;';
-
 // Custom events
 
 const event_names = ['bars/load', 'bars/before_load', 'bars/remove'];
@@ -72,7 +70,7 @@ function load(node, options){
 	})
 
 	node.bars.data.forEach((value, index) => {
-		let styles = bar_style;
+		let styles = '';
 		let bar_height = ((((parseFloat(value) - min) * 100) / (max - min)) / 100) * node.bars.height;
 		styles += 'line-height:'+bar_height+'px;';
 		styles += 'height:'+bar_height+'px;';
@@ -81,11 +79,12 @@ function load(node, options){
 		if(node.bars.pills) styles += 'border-radius:'+(bar_width/2)+'px;';
 		if(node.bars.circles) {
 			styles += 'width:'+bar_height+'px;';
+			styles += 'padding:'+(bar_width - bar_height)+';'
 			styles += 'border-radius:50%;';
 		} else {
 			styles += 'width:'+bar_width+'px;';
 		}
-		bar_elements += '<div style="'+styles+'">'+(node.bars.show_number ? value : '')+'</div>'
+		bar_elements += '<div class="ih-bar" style="'+styles+'">'+(node.bars.show_number ? value : '')+'</div>'
 	})
 
 	node.innerHTML = bar_elements;

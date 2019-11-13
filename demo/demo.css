@@ -96,7 +96,7 @@ dd a {
 }
 
 .page {
-	padding: 5vh 0;
+	padding: 30px 0;
 }
 
 @media (min-width: 800px) {
@@ -104,7 +104,7 @@ dd a {
 		padding: 0 30px;
 	}
 	.page {
-		padding: 15vh 0;
+		padding: 40px 0;
 	}
 }
 
@@ -192,6 +192,7 @@ dt {
 	box-shadow: inset -2px -5px 12px rgba(0,0,0,0.25);
 	color: rgba(255,255,255,0.8);
 	overflow: hidden;
+	margin-bottom: 25px;
 }
 
 @media (min-width: 800px) {

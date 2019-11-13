@@ -5,7 +5,7 @@ const Bars = {
 	nodes: false,
 	bar_style: 'display:inline-block;text-align:center;background:blue;color:white;',
 	init: function(context){
-		this.nodes = context.querySelectorAll('['+this.prefix+']');
+		this.nodes = document.querySelectorAll('['+this.prefix+']');
 		if(!this.nodes) return;
 		this.render_all_bars();
 		return this
@@ -42,7 +42,6 @@ const Bars = {
 		data.forEach((value, index) => {
 			let styles = this.bar_style;
 			let bar_height = ((((parseFloat(value) - min) * 100) / (max - min)) / 100) * height;
-			console.log(bar_height)
 			styles += 'width:'+bar_width+'px;';
 			styles += 'line-height:'+bar_height+'px;';
 			styles += 'height:'+bar_height+'px;';
@@ -57,5 +56,4 @@ const Bars = {
 	}
 }
 
-Object.create(Bars).init(document.querySelector('body'))
-
+module.exports = Object.create(Bars);

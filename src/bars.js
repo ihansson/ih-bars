@@ -1,7 +1,7 @@
 let nodes = [],
 	last_call = false,
 	events = {}
-	throttle = 100;
+	throttle = 50;
 
 // Custom events
 
@@ -65,15 +65,10 @@ function update(node){
 
 	const width = node.offsetWidth;
 	const spacing = node.bars.spacing ? (width / node.bars.data.length) / node.bars.spacing : false;
-	let bar_width;
+	const bar_width = !spacing ? (width / node.bars.data.length).toFixed(2) : (((width - (node.bars.data.length - 1) * spacing)) / node.bars.data.length).toFixed(2)
+	const max_height = width * (node.bars.height / 100);
 
-	if(spacing){
-		bar_width = (((width - (node.bars.data.length - 1) * spacing)) / node.bars.data.length).toFixed(2);
-	} else {
-		bar_width = (width / node.bars.data.length).toFixed(2);
-	}
-
-	node.style["height"] = (node.bars.circles ? bar_width+'px' : node.bars.height+'px');
+	node.style["height"] = (node.bars.circles ? bar_width+'px' : max_height+'px');
 
 	let bar_elements = '<div class="ih-bars">';
 	let max = 0;
@@ -87,9 +82,9 @@ function update(node){
 	node.bars.data.forEach((value, index) => {
 		let inner_styles = '';
 		let outer_styles = '';
-		let bar_height = ((((parseFloat(value) - min) * 100) / (max - min)) / 100) * (node.bars.circles ? bar_width : node.bars.height);
+		let bar_height = ((((parseFloat(value) - min) * 100) / (max - min)) / 100) * (node.bars.circles ? bar_width : max_height);
 		outer_styles += 'vertical-align:'+node.bars.vertical_align+';';
-		if(index + 1 !== node.bars.data.length && spacing) inner_styles += 'margin-right:'+spacing+'px;';
+		if(index + 1 !== node.bars.data.length && spacing) outer_styles += 'margin-right:'+spacing+'px;';
 		if(node.bars.pills) inner_styles += 'border-radius:'+(bar_width/2)+'px;';
 		if(node.bars.circles) {
 			inner_styles += 'width:'+bar_height+'px;';

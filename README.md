@@ -28,7 +28,7 @@ Settings are separated with a comma, data is provided in a comma separated list.
 | show_number | false | Output data number in bar |
 | vertical_align | middle | Vertically align the bar top/middle/bottom |
 | pills |  false | Render bars as pills with border-radius equal to half of their width |
-| circles | false | Render bars as circles |
+| circles | false | Render bars as circles. This will ignore the height option and instead use a proportion of width. |
 
 ### Events
 
@@ -37,7 +37,8 @@ The following events are triggered for nodes
 | Event Name | Action |
 | --- | --- |
 | bars/load | Node has been loaded |
-| bars/before_load | Node is about to be loaded |
+| bars/before_update | Node is about to be updated |
+| bars/update | Node has been updated |
 | bars/remove | Node has been removed from the bars watch list |
 
 ### Init
@@ -59,3 +60,4 @@ Include the library and init using default options.
 * Fix bug with overflowing width
 * Add colours
 * Circle bars should fill width
+* Allow for percentage height

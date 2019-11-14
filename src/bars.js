@@ -4,7 +4,7 @@ let nodes = [],
 
 // Custom events
 
-const event_names = ['bars/load', 'bars/before_load', 'bars/remove'];
+const event_names = ['bars/load', 'bars/before_load', 'bars/update', 'bars/before_update', 'bars/remove'];
 for(ev in event_names){
 	let event = document.createEvent('Event');
 	event.initEvent(event_names[ev], true, true);
@@ -52,7 +52,15 @@ function load(node, options){
 		}
 	}
 
-	node.dispatchEvent(events['bars/before_load'])
+	node.dispatchEvent(events['bars/load'])
+
+	update(node)
+
+}
+
+function update(node){
+
+	node.dispatchEvent(events['bars/before_update'])
 
 	const width = node.offsetWidth;
 
@@ -60,7 +68,7 @@ function load(node, options){
 
 	const bar_width = (((width - (node.bars.data.length - 1) * node.bars.spacing)) / node.bars.data.length).toFixed(2);
 
-	let bar_elements = '';
+	let bar_elements = '<div class="ih-bars">';
 	let max = 0;
 	let min = 0;
 
@@ -70,26 +78,29 @@ function load(node, options){
 	})
 
 	node.bars.data.forEach((value, index) => {
-		let styles = '';
-		let bar_height = ((((parseFloat(value) - min) * 100) / (max - min)) / 100) * node.bars.height;
-		styles += 'line-height:'+bar_height+'px;';
-		styles += 'height:'+bar_height+'px;';
-		styles += 'vertical-align:'+node.bars.vertical_align+';';
-		if(index + 1 !== node.bars.data.length) styles += 'margin-right:'+node.bars.spacing+'px;';
-		if(node.bars.pills) styles += 'border-radius:'+(bar_width/2)+'px;';
+		let inner_styles = '';
+		let outer_styles = '';
+		let bar_height = ((((parseFloat(value) - min) * 100) / (max - min)) / 100) * (node.bars.circles ? bar_width : node.bars.height);
+		outer_styles += 'vertical-align:'+node.bars.vertical_align+';';
+		if(index + 1 !== node.bars.data.length) inner_styles += 'margin-right:'+node.bars.spacing+'px;';
+		if(node.bars.pills) inner_styles += 'border-radius:'+(bar_width/2)+'px;';
 		if(node.bars.circles) {
-			styles += 'width:'+bar_height+'px;';
-			styles += 'padding:'+(bar_width - bar_height)+';'
-			styles += 'border-radius:50%;';
+			inner_styles += 'width:'+bar_height+'px;';
+			outer_styles += 'padding:0 '+((bar_width - bar_height) / 2)+'px;'
+			inner_styles += 'border-radius:50%;';
 		} else {
-			styles += 'width:'+bar_width+'px;';
+			inner_styles += 'width:'+bar_width+'px;';
 		}
-		bar_elements += '<div class="ih-bar" style="'+styles+'">'+(node.bars.show_number ? value : '')+'</div>'
+		inner_styles += 'line-height:'+bar_height+'px;';
+		inner_styles += 'height:'+bar_height+'px;';
+		bar_elements += '<div class="ih-bar" style="'+outer_styles+'"><div class="ih-bar-inner" style="'+inner_styles+'">'+(node.bars.show_number ? '<span class="ih-bar-number">' + value + '</span>' : '')+'</div></div>'
 	})
 
-	node.innerHTML = bar_elements;
+	bar_elements += '</div>';
 
-	node.dispatchEvent(events['bars/load'])
+	node.innerHTML = bar_elements;
+	
+	node.dispatchEvent(events['bars/update'])
 
 }
 

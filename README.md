@@ -23,7 +23,7 @@ Settings are separated with a comma, data is provided in a comma separated list.
 | Command | Default | Description |
 | --- | --- | --- |
 | data | '' | A comma separated list of numbers |
-| spacing | 0 | Space between bars in pixels |
+| spacing | 0 | Space between bars in percentage of bar width |
 | height | 100 | Maximum height in pixels |
 | show_number | false | Output data number in bar |
 | vertical_align | middle | Vertically align the bar top/middle/bottom |

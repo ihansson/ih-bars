@@ -1,6 +1,7 @@
 let nodes = [],
 	last_call = false,
-	events = {};
+	events = {}
+	throttle = 100;
 
 // Custom events
 
@@ -63,10 +64,16 @@ function update(node){
 	node.dispatchEvent(events['bars/before_update'])
 
 	const width = node.offsetWidth;
+	const spacing = node.bars.spacing ? (width / node.bars.data.length) / node.bars.spacing : false;
+	let bar_width;
 
-	node.style["height"] = node.bars.height+'px';
+	if(spacing){
+		bar_width = (((width - (node.bars.data.length - 1) * spacing)) / node.bars.data.length).toFixed(2);
+	} else {
+		bar_width = (width / node.bars.data.length).toFixed(2);
+	}
 
-	const bar_width = (((width - (node.bars.data.length - 1) * node.bars.spacing)) / node.bars.data.length).toFixed(2);
+	node.style["height"] = (node.bars.circles ? bar_width+'px' : node.bars.height+'px');
 
 	let bar_elements = '<div class="ih-bars">';
 	let max = 0;
@@ -82,7 +89,7 @@ function update(node){
 		let outer_styles = '';
 		let bar_height = ((((parseFloat(value) - min) * 100) / (max - min)) / 100) * (node.bars.circles ? bar_width : node.bars.height);
 		outer_styles += 'vertical-align:'+node.bars.vertical_align+';';
-		if(index + 1 !== node.bars.data.length) inner_styles += 'margin-right:'+node.bars.spacing+'px;';
+		if(index + 1 !== node.bars.data.length && spacing) inner_styles += 'margin-right:'+spacing+'px;';
 		if(node.bars.pills) inner_styles += 'border-radius:'+(bar_width/2)+'px;';
 		if(node.bars.circles) {
 			inner_styles += 'width:'+bar_height+'px;';
@@ -99,9 +106,17 @@ function update(node){
 	bar_elements += '</div>';
 
 	node.innerHTML = bar_elements;
-	
+
 	node.dispatchEvent(events['bars/update'])
 
+}
+
+function update_all(){
+	const now = Date.now();
+	if(last_call && now - last_call < throttle) return;
+	last_call = now;
+	console.log('update all')
+	for(i in nodes) update(nodes[i])
 }
 
 // Extracts setting values
@@ -123,10 +138,17 @@ function extract_settings(string){
 // Adds default selector nodes
 function init(){
 	add('[bars]');
+	window.addEventListener('resize', update_all)
+}
+
+function destroy(){
+	nodes = []
+	window.removeEventListener('resize', update_all)
 }
 
 module.exports = {
 	init: init,
+	destroy: destroy,
 	add: add,
 	remove: remove,
 	load: load

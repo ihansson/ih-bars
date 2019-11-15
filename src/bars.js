@@ -122,7 +122,6 @@ function update_all(){
 	const now = Date.now();
 	if(last_call && now - last_call < throttle) return;
 	last_call = now;
-	console.log('update all')
 	for(i in nodes) update(nodes[i])
 }
 
@@ -146,8 +145,7 @@ function extract_settings(string){
 // Color helpers
 function get_color_linear(colors, index, length){
 	const perc = (100 / length) * index
-	return 'rgb('+get_color_step(colors, 'r', perc)+'';
-	return 'red';
+	return 'rgb('+get_color_step(colors, 'r', perc)+','+get_color_step(colors, 'g', perc)+','+get_color_step(colors, 'b', perc)+')';
 }
 
 function get_color_step(colors, key, perc){

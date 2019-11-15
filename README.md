@@ -58,8 +58,6 @@ Include the library and init using default options.
 
 ### Todo
 
-* Make responsive properly
-* Fix bug with overflowing width
-* Add colours
-* Circle bars should fill width
-* Allow for percentage height
+* Animations
+* Redo demo
+* JS API

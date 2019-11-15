@@ -35,6 +35,8 @@ function load(node, options){
 		spacing : 0,
 		height: 100,
 		vertical_align : 'middle',
+		color_mode: 'linear',
+		colors: ['FF0000','00FF00'],
 		pills: false,
 		circle: false,
 		show_number: false
@@ -52,6 +54,8 @@ function load(node, options){
 			node.bars[opt] = options[opt]
 		}
 	}
+
+	node.bars.colors = node.bars.colors.map(function(value){ return hexToRgb(value) })
 
 	node.dispatchEvent(events['bars/load'])
 
@@ -79,7 +83,9 @@ function update(node){
 		if(value < min) min = parseFloat(value)
 	})
 
+
 	node.bars.data.forEach((value, index) => {
+		let background;
 		let inner_styles = '';
 		let outer_styles = '';
 		let bar_height = ((((parseFloat(value) - min) * 100) / (max - min)) / 100) * (node.bars.circles ? bar_width : max_height);
@@ -93,6 +99,12 @@ function update(node){
 		} else {
 			inner_styles += 'width:'+bar_width+'px;';
 		}
+		if(node.bars.color_mode == 'linear'){
+			background = get_color_linear(node.bars.colors, index, node.bars.data.length)
+		} else {
+			background = get_color_linear(node.bars.colors, value, max)
+		}
+		inner_styles += 'background:'+background+';';
 		inner_styles += 'line-height:'+bar_height+'px;';
 		inner_styles += 'height:'+bar_height+'px;';
 		bar_elements += '<div class="ih-bar" style="'+outer_styles+'"><div class="ih-bar-inner" style="'+inner_styles+'">'+(node.bars.show_number ? '<span class="ih-bar-number">' + value + '</span>' : '')+'</div></div>'
@@ -125,9 +137,32 @@ function extract_settings(string){
 		let value = arr[1] ? arr[1].trim() : true;
 		if(['height', 'spacing'].indexOf(key) !== -1) value = parseInt(value)
 		if(['data'].indexOf(key) !== -1) value = value.split(',').map(function(value){ return parseFloat(value) })
+		if(['colors'].indexOf(key) !== -1) value = value.split(',').map(function(value){ return value.replace('#','') })
 		settings[key] = arr[1] ? value : true
 	});
 	return settings;
+}
+
+// Color helpers
+function get_color_linear(colors, index, length){
+	const perc = (100 / length) * index
+	return 'rgb('+get_color_step(colors, 'r', perc)+'';
+	return 'red';
+}
+
+function get_color_step(colors, key, perc){
+	const a = colors[0][key]
+	const b = colors[1][key]
+	return ((((b - a) / 100) * perc) + a)
+}
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
 }
 
 // Adds default selector nodes

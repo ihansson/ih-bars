@@ -68,7 +68,8 @@ function update(node){
 	node.dispatchEvent(events['bars/before_update'])
 
 	const width = node.offsetWidth;
-	const spacing = node.bars.spacing ? (width / node.bars.data.length) / node.bars.spacing : false;
+	const spacing = node.bars.spacing ? (width / node.bars.data.length) * (node.bars.spacing / 100) : false;
+	console.log(spacing)
 	const bar_width = !spacing ? (width / node.bars.data.length).toFixed(2) : (((width - (node.bars.data.length - 1) * spacing)) / node.bars.data.length).toFixed(2)
 	const max_height = width * (node.bars.height / 100);
 

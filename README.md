@@ -55,9 +55,3 @@ Include the library and init using default options.
 <script type="text/javascript" src="bars.min.js"></script>
 <script type="text/javascript">bars.init()</script>
 ```
-
-### Todo
-
-* Animations
-* Redo demo
-* JS API

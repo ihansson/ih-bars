@@ -69,7 +69,6 @@ function update(node){
 
 	const width = node.offsetWidth;
 	const spacing = node.bars.spacing ? (width / node.bars.data.length) * (node.bars.spacing / 100) : false;
-	console.log(spacing)
 	const bar_width = !spacing ? (width / node.bars.data.length).toFixed(2) : (((width - (node.bars.data.length - 1) * spacing)) / node.bars.data.length).toFixed(2)
 	const max_height = width * (node.bars.height / 100);
 
@@ -79,13 +78,13 @@ function update(node){
 	let max = 0;
 	let min = 0;
 
-	node.bars.data.forEach(value => {
+	node.bars.data.forEach(function(value){
 		if(value > max) max = parseFloat(value)
 		if(value < min) min = parseFloat(value)
 	})
 
 
-	node.bars.data.forEach((value, index) => {
+	node.bars.data.forEach(function(value, index) {
 		let background;
 		let inner_styles = '';
 		let outer_styles = '';
@@ -152,7 +151,7 @@ function get_color_linear(colors, index, length){
 function get_color_step(colors, key, perc){
 	const a = colors[0][key]
 	const b = colors[1][key]
-	return ((((b - a) / 100) * perc) + a)
+	return ((((b - a) / 100) * perc) + a).toFixed(0)
 }
 
 function hexToRgb(hex) {

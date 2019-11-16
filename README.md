@@ -1,4 +1,4 @@
-# Bars - [View demo](http://ianhan.com/libraries/ih-bars/demo)
+# Bars - [View demo](http://ianhan.com/library/bars)
 
 Bars is a library for rendering simple bar visualizations.
 
